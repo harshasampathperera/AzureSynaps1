@@ -1,0 +1,17 @@
+{
+	"name": "DataCsvfromSqlScript",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT Region,sum(Total)\nFROM\n    OPENROWSET(\n        BULK 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/SampleData.csv',\n        FORMAT = 'CSV',\n        HEADER_ROW=True,\n        PARSER_VERSION='2.0'\n    ) AS [result]\n    group by Region\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": -1
+		},
+		"type": "SqlQuery"
+	}
+}
