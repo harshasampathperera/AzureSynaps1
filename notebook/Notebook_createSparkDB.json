@@ -1,0 +1,86 @@
+{
+	"name": "Notebook_createSparkDB",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkPool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/c17c119d-9bdf-4241-aa8a-06f548c35eb8/resourceGroups/Harsha81/providers/Microsoft.Synapse/workspaces/harshsynapse/bigDataPools/sparkPool1",
+				"name": "sparkPool1",
+				"type": "Spark",
+				"endpoint": "https://harshsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkPool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://demoharsha@harshadatalakestorage2.dfs.core.windows.net/NYCTripSmall.parquet', format='parquet')\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"spark.sql(\"Create database if not exists mytaxdb\")\r\n",
+					"df.write.mode(\"overwrite\").saveAsTable(\"mytaxdb.Trip\")"
+				],
+				"execution_count": 7
+			}
+		]
+	}
+}
