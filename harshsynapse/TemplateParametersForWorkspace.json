@@ -5,10 +5,10 @@
 		"workspaceName": {
 			"value": "harshsynapse"
 		},
-		"AzureBlobStorage1_connectionString": {
+		"harshsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
-		"harshsynapse-WorkspaceDefaultSqlServer_connectionString": {
+		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
 		"harshsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
