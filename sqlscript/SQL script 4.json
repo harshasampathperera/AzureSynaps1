@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 4",
+	"properties": {
+		"content": {
+			"query": "\n\nDROP TABLE [dbo].[People]\nGO\nCREATE TABLE [dbo].[People]\n( \n\t[id] VARCHAR(20),\n\t[FIRST NAME] varchar(20) ,\n\t[LAST NAME] varchar(20) ,\n\t[Gender] varchar(20),\n\t[Country] varchar(20) ,\n\t[AGE] varchar(20) ,\n\t[DATE] [date]  \n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\nCOPY INTO dbo.People\n(id 1,[First Name] 2,[Last Name] 3,Gender 4,Country 5,Age 6,Date 7)\nFROM 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/Sample.csv'\n \n WITH\n(        \nFILE_TYPE = 'CSV',\nMAXERRORS=0,\nIDENTITY_INSERT='OFF'\n) \n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "sqlpool",
+				"databaseName": "sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
