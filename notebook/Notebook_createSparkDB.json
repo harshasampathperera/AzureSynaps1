@@ -80,6 +80,26 @@
 					"df.write.mode(\"overwrite\").saveAsTable(\"mytaxdb.Trip\")"
 				],
 				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"df1=spark.sql(\"select * from mytaxdb.Trip\")\r\n",
+					"display(df1)"
+				],
+				"execution_count": 1
 			}
 		]
 	}
