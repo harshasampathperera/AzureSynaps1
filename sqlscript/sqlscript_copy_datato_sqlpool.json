@@ -1,0 +1,17 @@
+{
+	"name": "sqlscript_copy_datato_sqlpool",
+	"properties": {
+		"content": {
+			"query": "\nGO\n\nCREATE  TABLE [dbo].[trip]\n( \n\n\t[PassengerCount] [int]  NULL,\n\t[TripDistanceMiles] [float]  NULL,\n\t[PaymentType] [varchar](8000)  NULL,\n\t[TotalAmount] [numeric](19,4)  NULL\n)\nwith \n(\nDISTRIBUTION=ROUND_ROBIN,\nCLUSTERED COLUMNSTORE INDEX\n\n)\n\nGO\n\nCOPY INTO [dbo].[trip]\n(PassengerCount,TripDistanceMiles,PaymentType,TotalAmount)\nFROM 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/NYCTripSmall.parquet'\nWITH\n(\n\tFILE_TYPE='PARQUET'\n\t,MAXERRORS=0\n\t,IDENTITY_INSERT='OFF'\n)\n\n\n\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "sqlpool",
+				"databaseName": "sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

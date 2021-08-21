@@ -1,0 +1,24 @@
+{
+	"name": "TriggerToPipe",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "writefilefrSparkPooltoADLStorage",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2021-08-21T15:27:00",
+				"timeZone": "Sri Lanka Standard Time"
+			}
+		}
+	}
+}

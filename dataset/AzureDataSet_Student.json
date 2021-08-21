@@ -1,0 +1,37 @@
+{
+	"name": "AzureDataSet_Student",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureLinkService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "St_No",
+				"type": "nvarchar"
+			},
+			{
+				"name": "St_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "St_Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "St_IdNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Course_ID",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Student"
+		}
+	}
+}
