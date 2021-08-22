@@ -36,56 +36,38 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/AzureDataSet_Student')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
+			"name": "[concat(parameters('workspaceName'), '/writefilefrSparkPooltoADLStorage')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureLinkService",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
+				"activities": [
 					{
-						"name": "St_No",
-						"type": "nvarchar"
-					},
-					{
-						"name": "St_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "St_Address",
-						"type": "nvarchar"
-					},
-					{
-						"name": "St_IdNo",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Course_ID",
-						"type": "nvarchar"
+						"name": "Notebook1",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "Notebook_FileWriteTo_DLstorage",
+								"type": "NotebookReference"
+							},
+							"snapshot": true
+						}
 					}
 				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Student"
-				}
+				"annotations": [],
+				"lastPublishTime": "2021-08-21T10:22:35Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/AzureLinkService')]"
+				"[concat(variables('workspaceId'), '/notebooks/Notebook_FileWriteTo_DLstorage')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
-			"type": "Microsoft.Synapse/workspaces/credentials",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"type": "ManagedIdentity",
-				"typeProperties": {}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/harshsynapse-WorkspaceDefaultStorage')]",
@@ -169,6 +151,62 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/PowerBIWorkspace1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "PowerBIWorkspace",
+				"typeProperties": {
+					"workspaceID": "fc1016b7-c7f5-4906-ae4a-474f71e15b98",
+					"tenantID": "6912cb59-28a7-41be-9092-6f68bc679466"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureDataSet_Student')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureLinkService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "St_No",
+						"type": "nvarchar"
+					},
+					{
+						"name": "St_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "St_Address",
+						"type": "nvarchar"
+					},
+					{
+						"name": "St_IdNo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Course_ID",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Student"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureLinkService')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/TriggerToPipe')]",
 			"type": "Microsoft.Synapse/workspaces/triggers",
 			"apiVersion": "2019-06-01-preview",
@@ -197,6 +235,56 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/pipelines/writefilefrSparkPooltoADLStorage')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataCsvfromSqlScript')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT Region,sum(Total)\nFROM\n    OPENROWSET(\n        BULK 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/SampleData.csv',\n        FORMAT = 'CSV',\n        HEADER_ROW=True,\n        PARSER_VERSION='2.0'\n    ) AS [result]\n    group by Region\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "Built-in",
+						"databaseName": "master"
+					},
+					"resultLimit": -1
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sqlscript_copy_datato_sqlpool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "\nGO\n\nCREATE  TABLE [dbo].[trip]\n( \n\n\t[PassengerCount] [int]  NULL,\n\t[TripDistanceMiles] [float]  NULL,\n\t[PaymentType] [varchar](8000)  NULL,\n\t[TotalAmount] [numeric](19,4)  NULL\n)\nwith \n(\nDISTRIBUTION=ROUND_ROBIN,\nCLUSTERED COLUMNSTORE INDEX\n\n)\n\nGO\n\nCOPY INTO [dbo].[trip]\n(PassengerCount,TripDistanceMiles,PaymentType,TotalAmount)\nFROM 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/NYCTripSmall.parquet'\nWITH\n(\n\tFILE_TYPE='PARQUET'\n\t,MAXERRORS=0\n\t,IDENTITY_INSERT='OFF'\n)\n\n\n\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "sqlpool",
+						"databaseName": "sqlpool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/Notebook_createSparkDB')]",
@@ -410,153 +498,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DataCsvfromSqlScript')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT Region,sum(Total)\nFROM\n    OPENROWSET(\n        BULK 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/SampleData.csv',\n        FORMAT = 'CSV',\n        HEADER_ROW=True,\n        PARSER_VERSION='2.0'\n    ) AS [result]\n    group by Region\n\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
-					},
-					"resultLimit": -1
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE TABLE [dbo].[Table]\n(\n    \n)\nWITH\n(\n    DISTRIBUTION = HASH (col1),\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 4')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "\n\nDROP TABLE [dbo].[People]\nGO\nCREATE TABLE [dbo].[People]\n( \n\t[id] VARCHAR(20),\n\t[FIRST NAME] varchar(20) ,\n\t[LAST NAME] varchar(20) ,\n\t[Gender] varchar(20),\n\t[Country] varchar(20) ,\n\t[AGE] varchar(20) ,\n\t[DATE] [date]  \n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\nCOPY INTO dbo.People\n(id 1,[First Name] 2,[Last Name] 3,Gender 4,Country 5,Age 6,Date 7)\nFROM 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/Sample.csv'\n \n WITH\n(        \nFILE_TYPE = 'CSV',\nMAXERRORS=0,\nIDENTITY_INSERT='OFF'\n) \n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 5')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "DROP TABLE [dbo].[People]\nGO\n\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/sqlscript_copy_datato_sqlpool')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "\nGO\n\nCREATE  TABLE [dbo].[trip]\n( \n\n\t[PassengerCount] [int]  NULL,\n\t[TripDistanceMiles] [float]  NULL,\n\t[PaymentType] [varchar](8000)  NULL,\n\t[TotalAmount] [numeric](19,4)  NULL\n)\nwith \n(\nDISTRIBUTION=ROUND_ROBIN,\nCLUSTERED COLUMNSTORE INDEX\n\n)\n\nGO\n\nCOPY INTO [dbo].[trip]\n(PassengerCount,TripDistanceMiles,PaymentType,TotalAmount)\nFROM 'https://harshadatalakestorage2.dfs.core.windows.net/demoharsha/NYCTripSmall.parquet'\nWITH\n(\n\tFILE_TYPE='PARQUET'\n\t,MAXERRORS=0\n\t,IDENTITY_INSERT='OFF'\n)\n\n\n\n\n\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/writefilefrSparkPooltoADLStorage')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Notebook1",
-						"type": "SynapseNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebook": {
-								"referenceName": "Notebook_FileWriteTo_DLstorage",
-								"type": "NotebookReference"
-							},
-							"snapshot": true
-						}
-					}
-				],
-				"annotations": [],
-				"lastPublishTime": "2021-08-21T10:22:35Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Notebook_FileWriteTo_DLstorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/sqlpool')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"restorePointInTime": "0001-01-01T00:00:00",
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
@@ -594,6 +535,19 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sqlpool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
 		}
 	]
 }
